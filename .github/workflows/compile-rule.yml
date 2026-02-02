@@ -47,7 +47,7 @@ jobs:
       # 步骤5：提交并推送生成的 rule.srs 文件到仓库
       - name: Commit and push rule.srs
         run: |
-          git add rule.srs
+          git add geo/geosite/rule.srs
           git commit -m "chore: auto compile rule.json to rule.srs [skip ci]" || echo "No changes to commit"
           # 简化推送命令：直接推送到origin仓库的当前分支（无需手动拼接GITHUB_TOKEN）
           git push origin HEAD:${{ github.ref }}
