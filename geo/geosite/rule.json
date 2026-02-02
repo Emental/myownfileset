@@ -3,7 +3,8 @@
   "rules": [
     { 
       "domain_suffix": [
-        "missav.ws"
+        "missav.ws",
+        "missav.com"
       ],
       "domain_keyword": [
         "missav"
