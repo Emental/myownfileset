@@ -1,0 +1,50 @@
+# 工作流名称，可在 GitHub Action 面板中看到
+name: Compile Rule to SRS
+
+# 触发条件：仅当 rule.json 文件在 push/pull_request 时触发（限定 main 分支，可根据你的分支修改）
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'rule.json' ]  # 仅监控 rule.json 文件的变动
+  pull_request:
+    branches: [ main ]
+    paths: [ 'rule.json' ]
+
+# 执行的任务
+jobs:
+  compile-and-commit:
+    # 运行环境：使用最新版 Ubuntu（sing-box 对 Linux 支持最好）
+    runs-on: ubuntu-latest
+    steps:
+      # 步骤1：检出仓库代码到 Action 运行环境（必须步骤，否则无法访问仓库文件）
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false  # 关闭默认凭证，避免后续提交权限冲突
+
+      # 步骤2：安装 sing-box 工具（官方一键安装脚本，适配最新版本）
+      - name: Install sing-box
+        run: |
+          curl -fsSL https://sing-box.app/install.sh | bash
+          # 验证安装是否成功，打印版本（可选，便于排查问题）
+          sing-box version
+
+      # 步骤3：执行编译命令，生成 rule.srs 文件
+      - name: Compile rule.json to rule.srs
+        run: sing-box rule-set compile rule.json  # 你指定的核心编译命令
+
+      # 步骤4：配置 Git 身份（提交文件时需要，使用 GitHub 官方机器人身份）
+      - name: Configure Git user
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      # 步骤5：提交并推送生成的 rule.srs 文件到仓库
+      - name: Commit and push rule.srs
+        run: |
+          # 添加 rule.srs 到暂存区
+          git add rule.srs
+          # 提交（若文件无变动则跳过，避免 Action 失败）
+          git commit -m "chore: auto compile rule.json to rule.srs [skip ci]" || echo "No changes to commit"
+          # 推送提交到仓库（使用个人访问令牌作为凭证，避免权限不足）
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.ref }}
