@@ -1,2 +1,3 @@
-# mygeoruleset
-my own geo site/ip rule set
+# myownfileset
+
+This is a repository for storing my own static resource files.
