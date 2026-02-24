@@ -52,6 +52,10 @@
     ],
     "rules": [
       {
+        "source_ip_cidr": ["192.168.3.96/27", "192.168.3.128/26", "192.168.3.192/28"],
+        "server": "dns_direct_doh"
+      },
+      {
         "clash_mode": "direct",
         "server": "dns_direct_doh"
       },
@@ -170,6 +174,10 @@
       },
       {
         "ip_is_private": true, 
+        "outbound": "direct"
+      },
+      {
+        "source_ip_cidr": ["192.168.3.96/27", "192.168.3.128/26", "192.168.3.192/28"],
         "outbound": "direct"
       },
       {
