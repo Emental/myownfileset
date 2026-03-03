@@ -74,7 +74,7 @@
     ],
     "strategy": "prefer_ipv4",
     "final": "dns_direct_doh",
-    "client_subnet": "220.179.24.169",
+    "client_subnet": "223.166.199.10",
     "disable_cache": false,
     "disable_expire": false,
     "independent_cache": false
